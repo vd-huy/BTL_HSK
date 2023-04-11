@@ -84,6 +84,11 @@ namespace BTL_HSK
                 {
                     MessageBox.Show("them du lieu thanh cong");
                     btnXem_Click(sender, e);
+
+                    txbMaThuoc.Clear();
+                    txbTenThuoc.Clear();
+                    txbSoLuong.Clear();
+                    txbDonGia.Clear();
                 }
                 else
                 {
@@ -166,8 +171,14 @@ namespace BTL_HSK
         {
             if (SuaDuLieuThuoc(dtgvThuoc))
             {
+                txbMaThuoc.ReadOnly = false;
                 MessageBox.Show("cap nhat du lieu thanh cong");
                 btnXem_Click(sender, e);
+
+                txbMaThuoc.Clear();
+                txbTenThuoc.Clear();
+                txbSoLuong.Clear();
+                txbDonGia.Clear();
             }
             else
             {
@@ -186,8 +197,9 @@ namespace BTL_HSK
             dtpHSD.Text = dtgvThuoc.Rows[index].Cells[3].Value.ToString();
             txbSoLuong.Text = dtgvThuoc.Rows[index].Cells[4].Value.ToString();
             txbDonGia.Text = dtgvThuoc.Rows[index].Cells[5].Value.ToString();
-            
-            
+
+            txbMaThuoc.ReadOnly = true;
+
         }
 
 
@@ -202,9 +214,7 @@ namespace BTL_HSK
                 command = connection.CreateCommand();
                 command.CommandText = procSuaThuoc;
                 command.CommandType = CommandType.StoredProcedure;
-
-
-             
+ 
                 
                     command.Parameters.AddWithValue("@sMaThuoc", txbMaThuoc.Text);
                     command.Parameters.AddWithValue("@sTenThuoc", txbTenThuoc.Text);
@@ -212,8 +222,8 @@ namespace BTL_HSK
                     command.Parameters.AddWithValue("@dHanSuDung", dtpHSD.Value);
                     command.Parameters.AddWithValue("@iSoLuong", Convert.ToInt32(txbSoLuong.Text));
                     command.Parameters.AddWithValue("@fDonGia", Convert.ToDouble(txbDonGia.Text));
-                 
-                
+
+                                
 
 
                 i = command.ExecuteNonQuery();
@@ -363,12 +373,6 @@ namespace BTL_HSK
 
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            txbMaThuoc.Clear();
-            txbTenThuoc.Clear();
-            txbSoLuong.Clear();
-            txbDonGia.Clear();
-        }
+
     }
 }

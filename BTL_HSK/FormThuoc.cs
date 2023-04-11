@@ -152,7 +152,7 @@ namespace BTL_HSK
                 command.CommandText = procXoaID;
                 command.CommandType = CommandType.StoredProcedure;
 
-                string MaThuoc = data.SelectedCells[0].OwningRow.Cells["sMaThuoc"].Value.ToString();
+                string MaThuoc = data.SelectedCells[0].OwningRow.Cells["Mã Thuốc"].Value.ToString();
                 command.Parameters.AddWithValue("@sMaThuoc", MaThuoc);
               i = command.ExecuteNonQuery();
 
@@ -186,6 +186,8 @@ namespace BTL_HSK
             dtpHSD.Text = dtgvThuoc.Rows[index].Cells[3].Value.ToString();
             txbSoLuong.Text = dtgvThuoc.Rows[index].Cells[4].Value.ToString();
             txbDonGia.Text = dtgvThuoc.Rows[index].Cells[5].Value.ToString();
+            
+            
         }
 
 
@@ -361,8 +363,12 @@ namespace BTL_HSK
 
         }
 
-     
-
-
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            txbMaThuoc.Clear();
+            txbTenThuoc.Clear();
+            txbSoLuong.Clear();
+            txbDonGia.Clear();
+        }
     }
 }

@@ -48,6 +48,7 @@
             this.dtgvThuoc = new System.Windows.Forms.DataGridView();
             this.txbTimKiem = new System.Windows.Forms.TextBox();
             this.btnTimKiem = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
             this.grbThuoc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvThuoc)).BeginInit();
             this.SuspendLayout();
@@ -55,7 +56,7 @@
             // btnThem
             // 
             this.btnThem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnThem.Location = new System.Drawing.Point(196, 276);
+            this.btnThem.Location = new System.Drawing.Point(126, 276);
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(108, 43);
             this.btnThem.TabIndex = 5;
@@ -66,7 +67,7 @@
             // btnSua
             // 
             this.btnSua.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnSua.Location = new System.Drawing.Point(341, 276);
+            this.btnSua.Location = new System.Drawing.Point(240, 276);
             this.btnSua.Name = "btnSua";
             this.btnSua.Size = new System.Drawing.Size(108, 43);
             this.btnSua.TabIndex = 6;
@@ -77,7 +78,7 @@
             // btnXoa
             // 
             this.btnXoa.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnXoa.Location = new System.Drawing.Point(483, 276);
+            this.btnXoa.Location = new System.Drawing.Point(354, 276);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.Size = new System.Drawing.Size(108, 43);
             this.btnXoa.TabIndex = 7;
@@ -88,7 +89,7 @@
             // btnXem
             // 
             this.btnXem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnXem.Location = new System.Drawing.Point(55, 276);
+            this.btnXem.Location = new System.Drawing.Point(12, 276);
             this.btnXem.Name = "btnXem";
             this.btnXem.Size = new System.Drawing.Size(108, 43);
             this.btnXem.TabIndex = 8;
@@ -270,12 +271,24 @@
             this.btnTimKiem.UseVisualStyleBackColor = true;
             this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
             // 
+            // btnClear
+            // 
+            this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.btnClear.Location = new System.Drawing.Point(468, 276);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(108, 43);
+            this.btnClear.TabIndex = 26;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            // 
             // FormThuoc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1092, 563);
+            this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnTimKiem);
             this.Controls.Add(this.txbTimKiem);
             this.Controls.Add(this.dtgvThuoc);
@@ -316,6 +329,7 @@
         private System.Windows.Forms.DataGridView dtgvThuoc;
         private System.Windows.Forms.TextBox txbTimKiem;
         private System.Windows.Forms.Button btnTimKiem;
+        private System.Windows.Forms.Button btnClear;
     }
 }
 

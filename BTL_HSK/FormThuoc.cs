@@ -362,11 +362,7 @@ namespace BTL_HSK
         }
 
      
-<<<<<<< HEAD
-     
-=======
-        //hello xin chào thất cả các bạn
->>>>>>> b9e054000cac2b5c17d7fd3808ae629699d8de60
+
 
     }
 }

@@ -24,10 +24,11 @@ namespace BTL_HSK
         string connectionSTR = "Data Source=DESKTOP-MJ5FCO6;Initial Catalog=Thuoc;Integrated Security=True";
         private void Form1_Load(object sender, EventArgs e)
         {
+            txbMaThuoc.Focus();
 
             string queryNhaCungCap = "SELECT * FROM vvNhaCungCap";
-            
-            using (SqlConnection connection= new SqlConnection(connectionSTR))
+
+            using (SqlConnection connection = new SqlConnection(connectionSTR))
             {
                 // mở kết nối
                 connection.Open();
@@ -36,11 +37,11 @@ namespace BTL_HSK
                 SqlDataReader reader = command.ExecuteReader();
 
                 // dùng datatable để load dữ liệu của SqlDataReader
-                DataTable table= new DataTable();
+                DataTable table = new DataTable();
                 table.Load(reader);
                 cbMaNCC.DataSource = table;
-                cbMaNCC.DisplayMember= "sMaKH";
-                cbMaNCC.ValueMember= "sMaKH";
+                cbMaNCC.DisplayMember = "sMaKH";
+                cbMaNCC.ValueMember = "sMaKH";
 
                 // đóng kết nối
                 connection.Close();
@@ -52,12 +53,14 @@ namespace BTL_HSK
 
 
 
+
+
         }
 
         private void btnXem_Click(object sender, EventArgs e)
         {
             string SelectThuoc = "SELECT * FROM vvSelectThuoc";
-    
+
             using (SqlConnection connection = new SqlConnection(connectionSTR))
             {
                 // mở kết nối
@@ -94,7 +97,7 @@ namespace BTL_HSK
                 {
                     MessageBox.Show("them du lieu khong thanh cong");
                 }
-            }else MessageBox.Show("Ma thuoc da ton tai");
+            } else MessageBox.Show("Ma thuoc da ton tai");
 
 
         }
@@ -108,7 +111,7 @@ namespace BTL_HSK
                 // mở kết nối
                 connection.Open();
 
-                
+
 
                 SqlCommand command = new SqlCommand();
                 command = connection.CreateCommand();
@@ -135,11 +138,11 @@ namespace BTL_HSK
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-           if(XoaThuocTheoMa(dtgvThuoc)) {
+            if (XoaThuocTheoMa(dtgvThuoc)) {
                 MessageBox.Show("xoa du lieu thanh cong");
                 btnXem_Click(sender, e);
             }
-           else
+            else
             {
                 MessageBox.Show("xoa du lieu khong thanh cong");
             }
@@ -148,9 +151,10 @@ namespace BTL_HSK
         public bool XoaThuocTheoMa(DataGridView data)
         {
             string procXoaID = "prXoaTheoMaThuoc";
-            int i;
+            bool check;
             using (SqlConnection connection = new SqlConnection(connectionSTR))
             {
+                int i = 0;
                 connection.Open();
                 SqlCommand command = new SqlCommand();
                 command = connection.CreateCommand();
@@ -159,12 +163,53 @@ namespace BTL_HSK
 
                 string MaThuoc = data.SelectedCells[0].OwningRow.Cells["Mã Thuốc"].Value.ToString();
                 command.Parameters.AddWithValue("@sMaThuoc", MaThuoc);
-              i = command.ExecuteNonQuery();
+
+                if (CheckXoaThuoc() == false)
+                {
+                i = command.ExecuteNonQuery();
+                }else
+                {
+                    MessageBox.Show("Ma thuoc muon xoa ton tai trong bang ChiTietHoaDon");
+                }
+                check = (i > 0);
 
             }
 
-            return (i > 0);
+            return check;
 
+        }
+
+        // kiểm tra xem mã muốn xóa có phải khóa ngoại của các bảng khác không
+        public bool CheckXoaThuoc()
+        {
+            bool check = false;
+            string query = "checkKhoaNgoaiThuoc";
+
+            using (SqlConnection connection = new SqlConnection(connectionSTR))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand();
+                command = connection.CreateCommand();
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = query;
+
+                command.Parameters.AddWithValue("@sMaThuoc", txbMaThuoc.Text);
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    check = true;
+                }
+                else
+                {
+                    check = false;
+                }
+
+                connection.Close();
+            }
+            return check;
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -203,7 +248,7 @@ namespace BTL_HSK
         }
 
 
-        public bool SuaDuLieuThuoc (DataGridView data)
+        public bool SuaDuLieuThuoc(DataGridView data)
         {
             string procSuaThuoc = "prSuaThuoc";
             int i;
@@ -214,16 +259,16 @@ namespace BTL_HSK
                 command = connection.CreateCommand();
                 command.CommandText = procSuaThuoc;
                 command.CommandType = CommandType.StoredProcedure;
- 
-                
-                    command.Parameters.AddWithValue("@sMaThuoc", txbMaThuoc.Text);
-                    command.Parameters.AddWithValue("@sTenThuoc", txbTenThuoc.Text);
-                    command.Parameters.AddWithValue("@sMaNCC", cbMaNCC.SelectedValue);
-                    command.Parameters.AddWithValue("@dHanSuDung", dtpHSD.Value);
-                    command.Parameters.AddWithValue("@iSoLuong", Convert.ToInt32(txbSoLuong.Text));
-                    command.Parameters.AddWithValue("@fDonGia", Convert.ToDouble(txbDonGia.Text));
 
-                                
+
+                command.Parameters.AddWithValue("@sMaThuoc", txbMaThuoc.Text);
+                command.Parameters.AddWithValue("@sTenThuoc", txbTenThuoc.Text);
+                command.Parameters.AddWithValue("@sMaNCC", cbMaNCC.SelectedValue);
+                command.Parameters.AddWithValue("@dHanSuDung", dtpHSD.Value);
+                command.Parameters.AddWithValue("@iSoLuong", Convert.ToInt32(txbSoLuong.Text));
+                command.Parameters.AddWithValue("@fDonGia", Convert.ToDouble(txbDonGia.Text));
+
+
 
 
                 i = command.ExecuteNonQuery();
@@ -248,10 +293,10 @@ namespace BTL_HSK
         private void txbSoLuong_KeyPress(object sender, KeyPressEventArgs e)
         {
             // hàm chỉ được nhập số vào textbox
-            if(!char.IsDigit(e.KeyChar) &&!char.IsControl(e.KeyChar))
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
             {
                 e.Handled = true;
-                
+
             }
         }
 
@@ -267,10 +312,11 @@ namespace BTL_HSK
         private void txbTenThuoc_KeyPress(object sender, KeyPressEventArgs e)
         {
             // hàm chỉ đươc nhập chữ vào textbox
-            if (!((e.KeyChar >= 65 && e.KeyChar <= 122 || e.KeyChar == 8)))
+            if(!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
             {
                 e.Handled = true;
             }
+
         }
 
         public bool KiemTraMaThuocTonTai()
@@ -287,7 +333,7 @@ namespace BTL_HSK
                 command.CommandText = checkMaThuoc;
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add("@sMaThuoc" , txbMaThuoc.Text);
+                command.Parameters.Add("@sMaThuoc", txbMaThuoc.Text);
 
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable table = new DataTable();
@@ -298,81 +344,53 @@ namespace BTL_HSK
                 {
                     check = true;
                 }
-                else check= false;
+                else check = false;
                 // đóng kết nối
                 connection.Close();
 
             }
 
             return check;
-            
+
         }
 
-        private void txbTimKiem_KeyPress(object sender, KeyPressEventArgs e)
+
+       
+        private void txbMaThuoc_Validating(object sender, CancelEventArgs e)
         {
-            if (!char.IsLetterOrDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            if (string.IsNullOrWhiteSpace(txbMaThuoc.Text))
             {
-                e.Handled = true;
+
+                errorProvider1.SetError(txbMaThuoc, "Vui lòng nhập giá trị vào ô này");
+                //e.Cancel = true;
             }
-        }
-
-        private void btnTimKiem_Click(object sender, EventArgs e)
-        {
-            string prTimKiemThuocTheoMa = "prTimKiemThuocTheoMa";
-
-            using (SqlConnection connection = new SqlConnection(connectionSTR))
+            else
             {
-                // mở kết nối
-                connection.Open();
 
-                SqlCommand command = new SqlCommand();
-                command = connection.CreateCommand();
-                command.CommandText = prTimKiemThuocTheoMa;
-                command.CommandType = CommandType.StoredProcedure;
-
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataTable table = new DataTable();
-
-                command.Parameters.AddWithValue("@sMaThuoc", txbTimKiem.Text);
-
-                adapter.Fill(table);
-                
-
-                if(table.Rows.Count <= 0)
-                {
-                    MessageBox.Show("khong co loai thuoc muon tim");
-                }else
-                {
-                    dtgvThuoc.DataSource = table;
-                }
-
-                // đóng kết nối
-                connection.Close();
-
+                errorProvider1.SetError(txbMaThuoc, "");
             }
         }
 
         private void txbMaThuoc_TextChanged(object sender, EventArgs e)
         {
-            
-                // kiểm tra nếu ít nhất 1 trong 4 textbox không có dữ liệu thì vô hiệu hóa các nút button
-                if (string.IsNullOrEmpty(txbMaThuoc.Text) ||
-                    string.IsNullOrEmpty(txbTenThuoc.Text) ||
-                    string.IsNullOrEmpty(txbSoLuong.Text) ||
-                    string.IsNullOrEmpty(txbDonGia.Text))
-                {
-                    btnThem.Enabled = false;
-                    btnSua.Enabled = false;
-                }
-                else
-                {
-                    btnThem.Enabled = true;
-                    btnSua.Enabled = true;
-                }
-            
-
+            // kiểm tra nếu ít nhất 1 trong 4 textbox không có dữ liệu thì vô hiệu hóa các nút button
+            if (string.IsNullOrEmpty(txbMaThuoc.Text) ||
+                string.IsNullOrEmpty(txbTenThuoc.Text) ||
+                string.IsNullOrEmpty(txbSoLuong.Text) ||
+                string.IsNullOrEmpty(txbDonGia.Text))
+            {
+                btnThem.Enabled = false;
+                btnSua.Enabled = false;
+                btnXoa.Enabled = false;
+            }
+            else
+            {
+                btnThem.Enabled = true;
+                btnSua.Enabled = true;
+                btnXoa.Enabled = true;
+            }
         }
 
-
+  
     }
 }

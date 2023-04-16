@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnThem = new System.Windows.Forms.Button();
             this.btnSua = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
@@ -46,16 +47,16 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.dtgvThuoc = new System.Windows.Forms.DataGridView();
-            this.txbTimKiem = new System.Windows.Forms.TextBox();
-            this.btnTimKiem = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.grbThuoc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvThuoc)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnThem
             // 
             this.btnThem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnThem.Location = new System.Drawing.Point(153, 276);
+            this.btnThem.Location = new System.Drawing.Point(353, 276);
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(108, 43);
             this.btnThem.TabIndex = 5;
@@ -66,7 +67,7 @@
             // btnSua
             // 
             this.btnSua.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnSua.Location = new System.Drawing.Point(297, 276);
+            this.btnSua.Location = new System.Drawing.Point(586, 276);
             this.btnSua.Name = "btnSua";
             this.btnSua.Size = new System.Drawing.Size(108, 43);
             this.btnSua.TabIndex = 6;
@@ -77,7 +78,7 @@
             // btnXoa
             // 
             this.btnXoa.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnXoa.Location = new System.Drawing.Point(444, 276);
+            this.btnXoa.Location = new System.Drawing.Point(844, 276);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.Size = new System.Drawing.Size(108, 43);
             this.btnXoa.TabIndex = 7;
@@ -88,7 +89,7 @@
             // btnXem
             // 
             this.btnXem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnXem.Location = new System.Drawing.Point(12, 276);
+            this.btnXem.Location = new System.Drawing.Point(114, 276);
             this.btnXem.Name = "btnXem";
             this.btnXem.Size = new System.Drawing.Size(108, 43);
             this.btnXem.TabIndex = 8;
@@ -205,6 +206,7 @@
             this.txbMaThuoc.TabIndex = 15;
             this.txbMaThuoc.TextChanged += new System.EventHandler(this.txbMaThuoc_TextChanged);
             this.txbMaThuoc.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txbMaThuoc_KeyPress);
+            this.txbMaThuoc.Validating += new System.ComponentModel.CancelEventHandler(this.txbMaThuoc_Validating);
             // 
             // label4
             // 
@@ -249,26 +251,9 @@
             this.dtgvThuoc.TabIndex = 16;
             this.dtgvThuoc.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgvThuoc_CellClick);
             // 
-            // txbTimKiem
+            // errorProvider1
             // 
-            this.txbTimKiem.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txbTimKiem.Location = new System.Drawing.Point(660, 283);
-            this.txbTimKiem.Name = "txbTimKiem";
-            this.txbTimKiem.Size = new System.Drawing.Size(231, 30);
-            this.txbTimKiem.TabIndex = 24;
-            this.txbTimKiem.Text = "Tìm kiếm theo mã thuốc";
-            this.txbTimKiem.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txbTimKiem_KeyPress);
-            // 
-            // btnTimKiem
-            // 
-            this.btnTimKiem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.btnTimKiem.Location = new System.Drawing.Point(897, 276);
-            this.btnTimKiem.Name = "btnTimKiem";
-            this.btnTimKiem.Size = new System.Drawing.Size(183, 43);
-            this.btnTimKiem.TabIndex = 25;
-            this.btnTimKiem.Text = "Tìm Kiếm";
-            this.btnTimKiem.UseVisualStyleBackColor = true;
-            this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
+            this.errorProvider1.ContainerControl = this;
             // 
             // FormThuoc
             // 
@@ -276,8 +261,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1092, 563);
-            this.Controls.Add(this.btnTimKiem);
-            this.Controls.Add(this.txbTimKiem);
             this.Controls.Add(this.dtgvThuoc);
             this.Controls.Add(this.grbThuoc);
             this.Controls.Add(this.btnXem);
@@ -290,8 +273,8 @@
             this.grbThuoc.ResumeLayout(false);
             this.grbThuoc.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvThuoc)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -314,8 +297,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dtgvThuoc;
-        private System.Windows.Forms.TextBox txbTimKiem;
-        private System.Windows.Forms.Button btnTimKiem;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }
 

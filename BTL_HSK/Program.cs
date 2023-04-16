@@ -16,7 +16,7 @@ namespace BTL_HSK
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormThuoc());
+            Application.Run(new FormNhanVien());
         }
     }
 }

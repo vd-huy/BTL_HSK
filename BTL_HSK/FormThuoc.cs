@@ -22,6 +22,7 @@ namespace BTL_HSK
 
         }
         string connectionSTR = "Data Source=DESKTOP-MJ5FCO6;Initial Catalog=Thuoc;Integrated Security=True";
+
         private void Form1_Load(object sender, EventArgs e)
         {
             txbMaThuoc.Focus();
@@ -43,6 +44,10 @@ namespace BTL_HSK
                 cbMaNCC.DisplayMember = "sMaKH";
                 cbMaNCC.ValueMember = "sMaKH";
 
+                cbMaNCCSearch.DataSource = table;
+                cbMaNCCSearch.DisplayMember = "sMaKH";
+                cbMaNCCSearch.ValueMember = "sMaKH";
+
                 // đóng kết nối
                 connection.Close();
 
@@ -51,7 +56,7 @@ namespace BTL_HSK
 
             txbMaThuoc_TextChanged(sender, e);
 
-
+            cbMaNCCSearch.SelectedIndex = -1;
 
 
 
@@ -59,45 +64,60 @@ namespace BTL_HSK
 
         private void btnXem_Click(object sender, EventArgs e)
         {
-            string SelectThuoc = "SELECT * FROM vvSelectThuoc";
-
-            using (SqlConnection connection = new SqlConnection(connectionSTR))
+            try
             {
-                // mở kết nối
-                connection.Open();
+                string SelectThuoc = "SELECT * FROM vvSelectThuoc";
 
-                SqlCommand command = new SqlCommand(SelectThuoc, connection);
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataTable tableThuoc = new DataTable();
+                using (SqlConnection connection = new SqlConnection(connectionSTR))
+                {
+                    // mở kết nối
+                    connection.Open();
 
-                adapter.Fill(tableThuoc);
-                dtgvThuoc.DataSource = tableThuoc;
+                    SqlCommand command = new SqlCommand(SelectThuoc, connection);
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable tableThuoc = new DataTable();
 
-                // đóng kết nối
-                connection.Close();
+                    adapter.Fill(tableThuoc);
+                    dtgvThuoc.DataSource = tableThuoc;
 
+                    // đóng kết nối
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chương trình lỗi", "thông báo");
             }
         }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
-            if (KiemTraMaThuocTonTai() == false)
+            try
             {
-                if (ThemDuLieuThuoc() > 0)
+                if (KiemTraMaThuocTonTai() == false)
                 {
-                    MessageBox.Show("them du lieu thanh cong");
-                    btnXem_Click(sender, e);
+                    if (ThemDuLieuThuoc() > 0)
+                    {
+                        MessageBox.Show("them du lieu thanh cong");
+                        btnXem_Click(sender, e);
 
-                    txbMaThuoc.Clear();
-                    txbTenThuoc.Clear();
-                    txbSoLuong.Clear();
-                    txbDonGia.Clear();
+                        txbMaThuoc.Clear();
+                        txbTenThuoc.Clear();
+                        txbSoLuong.Clear();
+                        txbDonGia.Clear();
+                    }
+                    else
+                    {
+                        MessageBox.Show("them du lieu khong thanh cong");
+                    }
                 }
-                else
-                {
-                    MessageBox.Show("them du lieu khong thanh cong");
-                }
-            } else MessageBox.Show("Ma thuoc da ton tai");
+                else MessageBox.Show("Ma thuoc da ton tai");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chương trình lỗi", "thông báo");
+            }
+
 
 
         }
@@ -138,7 +158,8 @@ namespace BTL_HSK
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (XoaThuocTheoMa(dtgvThuoc)) {
+            if (XoaThuocTheoMa(dtgvThuoc))
+            {
                 MessageBox.Show("xoa du lieu thanh cong");
                 btnXem_Click(sender, e);
             }
@@ -166,8 +187,9 @@ namespace BTL_HSK
 
                 if (CheckXoaThuoc() == false)
                 {
-                i = command.ExecuteNonQuery();
-                }else
+                    i = command.ExecuteNonQuery();
+                }
+                else
                 {
                     MessageBox.Show("Ma thuoc muon xoa ton tai trong bang ChiTietHoaDon");
                 }
@@ -214,41 +236,57 @@ namespace BTL_HSK
 
         private void btnSua_Click(object sender, EventArgs e)
         {
-            if (SuaDuLieuThuoc(dtgvThuoc))
+            try
             {
-                txbMaThuoc.ReadOnly = false;
-                MessageBox.Show("cap nhat du lieu thanh cong");
-                btnXem_Click(sender, e);
+                if (SuaDuLieuThuoc())
+                {
+                    txbMaThuoc.ReadOnly = false;
+                    MessageBox.Show("cap nhat du lieu thanh cong");
+                    btnXem_Click(sender, e);
 
-                txbMaThuoc.Clear();
-                txbTenThuoc.Clear();
-                txbSoLuong.Clear();
-                txbDonGia.Clear();
+                    txbMaThuoc.Clear();
+                    txbTenThuoc.Clear();
+                    txbSoLuong.Clear();
+                    txbDonGia.Clear();
+                }
+                else
+                {
+                    MessageBox.Show("cap nhat du lieu khong thanh cong");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("cap nhat du lieu khong thanh cong");
+                MessageBox.Show("Chương trình lỗi", "thông báo");
             }
+
         }
 
         // khi bấm vào ô muốn sửa dữ liệu thì tất cả dữ liệu của bản ghi sẽ hiện lên ở các textbox combobox 
         private void dtgvThuoc_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            int index = dtgvThuoc.CurrentRow.Index;
+            try
+            {
+                int index = dtgvThuoc.CurrentRow.Index;
 
-            txbMaThuoc.Text = dtgvThuoc.Rows[index].Cells[0].Value.ToString();
-            txbTenThuoc.Text = dtgvThuoc.Rows[index].Cells[1].Value.ToString();
-            cbMaNCC.SelectedValue = dtgvThuoc.Rows[index].Cells[2].Value;
-            dtpHSD.Text = dtgvThuoc.Rows[index].Cells[3].Value.ToString();
-            txbSoLuong.Text = dtgvThuoc.Rows[index].Cells[4].Value.ToString();
-            txbDonGia.Text = dtgvThuoc.Rows[index].Cells[5].Value.ToString();
+                txbMaThuoc.Text = dtgvThuoc.Rows[index].Cells[0].Value.ToString();
+                txbTenThuoc.Text = dtgvThuoc.Rows[index].Cells[1].Value.ToString();
+                cbMaNCC.SelectedValue = dtgvThuoc.Rows[index].Cells[2].Value;
+                dtpHSD.Text = dtgvThuoc.Rows[index].Cells[3].Value.ToString();
+                txbSoLuong.Text = dtgvThuoc.Rows[index].Cells[4].Value.ToString();
+                txbDonGia.Text = dtgvThuoc.Rows[index].Cells[5].Value.ToString();
 
-            txbMaThuoc.ReadOnly = true;
+                txbMaThuoc.ReadOnly = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("vui lòng bấm vào ô có dữ liệu", "thông báo");
+            }
+
 
         }
 
 
-        public bool SuaDuLieuThuoc(DataGridView data)
+        public bool SuaDuLieuThuoc()
         {
             string procSuaThuoc = "prSuaThuoc";
             int i;
@@ -286,7 +324,14 @@ namespace BTL_HSK
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && (e.KeyChar != ','))
             {
                 e.Handled = true;
-
+            }
+            else if (txbDonGia.Text.Contains(",") && e.KeyChar == ',')
+            {
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = false;
             }
         }
 
@@ -312,7 +357,7 @@ namespace BTL_HSK
         private void txbTenThuoc_KeyPress(object sender, KeyPressEventArgs e)
         {
             // hàm chỉ đươc nhập chữ vào textbox
-            if(!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
+            if (!char.IsLetter(e.KeyChar) && !char.IsControl(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
             {
                 e.Handled = true;
             }
@@ -355,7 +400,7 @@ namespace BTL_HSK
         }
 
 
-       
+
         private void txbMaThuoc_Validating(object sender, CancelEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txbMaThuoc.Text))
@@ -389,8 +434,131 @@ namespace BTL_HSK
                 btnSua.Enabled = true;
                 btnXoa.Enabled = true;
             }
+
+            
         }
 
-  
+        public DataTable SelectThuoc()
+        {
+            string SelectThuoc = "SELECT * FROM Thuoc";
+
+            DataTable tableThuoc = new DataTable();
+
+            using (SqlConnection connection = new SqlConnection(connectionSTR))
+            {
+                // mở kết nối
+                connection.Open();
+
+                SqlCommand command = new SqlCommand(SelectThuoc, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+
+                adapter.Fill(tableThuoc);
+
+
+
+                // đóng kết nối
+                connection.Close();
+
+            }
+
+            
+                return tableThuoc;
+            
+
+
+        }
+
+        private void btnTimKiem_Click(object sender, EventArgs e)
+        {
+
+            string filterMaThuoc = txbMaThuocSearch.Text;
+            string filterTenThuoc = txbTenThuocSearch.Text;
+            string fiterMaNCC = cbMaNCCSearch.Text;
+
+
+            DataView dtv = new DataView(SelectThuoc());
+            if (string.IsNullOrEmpty(filterMaThuoc) && string.IsNullOrEmpty(filterTenThuoc) && string.IsNullOrEmpty(fiterMaNCC))
+            {
+                 MessageBox.Show("hãy điền ít nhất 1 thông tin để tìm kiếm");
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(filterMaThuoc))
+                {
+                    dtv.RowFilter = "sTenThuoc LIKE '%" + filterTenThuoc + "%' and sMaNCC like '%" + fiterMaNCC + "%'";
+                }
+                if (string.IsNullOrEmpty(filterTenThuoc))
+                {
+                    dtv.RowFilter = "sMaThuoc LIKE '%" + filterMaThuoc + "%' and sMaNCC like '%" + fiterMaNCC + "%'";
+                }
+                if (string.IsNullOrEmpty(filterMaThuoc) && string.IsNullOrEmpty(filterTenThuoc))
+                {
+                    dtv.RowFilter = "sMaNCC LIKE '%" + fiterMaNCC + "%'";
+                }
+                if (!string.IsNullOrEmpty(filterMaThuoc) && !string.IsNullOrEmpty(filterTenThuoc))
+                {
+                    dtv.RowFilter = "sTenThuoc LIKE '%" + filterTenThuoc + "%' and sMaThuoc like '%" + filterMaThuoc + "%' and sMaNCC like '%" + fiterMaNCC + "%'";
+                }
+
+                if (dtv.Count == 0)
+                {
+                    MessageBox.Show("không tìm thấy thuốc");
+                }
+                else
+                {
+                    dtgvThuoc.DataSource = dtv;
+                    dtgvThuoc.Refresh();
+                    
+
+                }
+            }
+
+            
+
+            cbMaNCCSearch.SelectedIndex = -1;
+            txbMaThuocSearch.Clear();
+            txbTenThuocSearch.Clear();
+        }
+
+        private void btnInDS_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                
+                    using (SqlConnection connection = new SqlConnection(connectionSTR))
+                    {
+                        connection.Open();
+                        SqlCommand command = new SqlCommand();
+                        command = connection.CreateCommand();
+                        command.CommandText = "prSelectThuoc";
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        DataTable table = new DataTable();
+                        adapter.Fill(table);
+
+                        // gán vào report
+                        rptThuoc baocao = new rptThuoc();
+                        baocao.SetDataSource(table);
+                        // hiển thị báo cáo
+                        InBaoCao inBaoCao = new InBaoCao();
+                        inBaoCao.crystalReportViewer1.ReportSource = baocao;
+                        inBaoCao.ShowDialog();
+
+                        connection.Close();
+                    }
+                
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chương trình in xảy ra lỗi", "Thông báo");
+            }
+
+        }
+
+        
+
+        
     }
 }

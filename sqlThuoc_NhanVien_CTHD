@@ -1,0 +1,212 @@
+	CREATE VIEW vvNhaCungCap 
+	AS
+    SELECT * FROM dbo.KhachHang WHERE KhachHang.sLoaiKhach = N'nhà cung cấp'
+
+	SELECT * FROM vvNhaCungCap
+
+
+
+	CREATE PROC prThemThuoc
+	@sMaThuoc CHAR(10),
+	@sTenThuoc NVARCHAR(30) ,
+	@sMaNCC nvarchar(10) ,
+	@dHanSuDung date,
+	@iSoLuong INT ,
+	@fDonGia FLOAT 
+	AS
+    BEGIN
+        INSERT INTO dbo.Thuoc
+        VALUES
+        (   @sMaThuoc,
+            @sTenThuoc,
+            @sMaNCC,
+            @dHanSuDung,
+            @iSoLuong,
+            @fDonGia
+            )
+    END
+
+	CREATE VIEW vvSelectThuoc
+	as
+		SELECT Thuoc.sMaThuoc AS N'Mã Thuốc', Thuoc.sTenThuoc AS N'Tên Thuốc', Thuoc.sMaNCC AS N'Mã Nhà Cung Cấp', Thuoc.dHanSuDung AS N'Hạn Sử Dụng',
+		Thuoc.iSoLuong AS N'Số Lượng', Thuoc.fDonGia AS N'Đơn giá'
+		FROM dbo.Thuoc
+
+		SELECT * FROM vvSelectThuoc
+
+	CREATE PROC prXoaTheoMaThuoc 
+	@sMaThuoc CHAR(10)
+	AS
+    BEGIN
+        DELETE dbo.Thuoc WHERE Thuoc.sMaThuoc = @sMaThuoc
+    END
+
+
+	CREATE PROC prSuaThuoc
+	@sMaThuoc CHAR(10),
+	@sTenThuoc NVARCHAR(30) ,
+	@sMaNCC nvarchar(10) ,
+	@dHanSuDung date,
+	@iSoLuong INT ,
+	@fDonGia FLOAT 
+	AS
+    BEGIN
+        UPDATE dbo.Thuoc 
+            SET Thuoc.sTenThuoc = @sTenThuoc,
+			Thuoc.sMaNCC = @sMaNCC,
+            Thuoc.dHanSuDung = @dHanSuDung,
+            Thuoc.iSoLuong =@iSoLuong,
+            Thuoc.fDonGia = @fDonGia
+            WHERE Thuoc.sMaThuoc = @sMaThuoc
+    END
+
+	CREATE PROC checkMaThuoc 
+	@sMaThuoc CHAR(10)
+	AS
+    BEGIN
+        SELECT * FROM dbo.Thuoc WHERE Thuoc.sMaThuoc = @sMaThuoc 
+    END
+
+	CREATE PROC checkMaNCC 
+	@sMaKhachHang CHAR(10)
+	AS
+    BEGIN
+        SELECT * FROM dbo.KhachHang WHERE KhachHang.sMaKH = @sMaKhachHang
+    END
+
+	CREATE PROC prTimKiemThuocTheoMa
+	@sMaThuoc CHAR(10)
+	AS
+    BEGIN
+        SELECT * FROM dbo.Thuoc WHERE Thuoc.sMaThuoc = @sMaThuoc
+    END
+
+	CREATE PROC checkKhoaNgoaiThuoc
+	@sMaThuoc CHAR(10)
+	AS 
+	BEGIN
+	    SELECT * FROM dbo.ChiTietHoaDon WHERE ChiTietHoaDon.sMaThuoc = @sMaThuoc;
+	END
+
+	SELECT * FROM dbo.ChiTietHoaDon
+
+	CREATE PROC prSelectThuoc
+	AS BEGIN
+	       SELECT Thuoc.sMaThuoc AS N'Mã Thuốc', Thuoc.sTenThuoc AS N'Tên Thuốc', Thuoc.sMaNCC AS N'Mã Nhà Cung Cấp', Thuoc.dHanSuDung AS N'Hạn Sử Dụng',
+		Thuoc.iSoLuong AS N'Số Lượng', Thuoc.fDonGia AS N'Đơn giá'
+		FROM dbo.Thuoc
+	   END
+	   CREATE PROC CTHDTheoMaThuoc
+	   @sMaThuoc CHAR(10)
+	   AS
+       BEGIN
+ 	 SELECT * FROM dbo.ChiTietHoaDon WHERE ChiTietHoaDon.sMaThuoc = @sMaThuoc          
+       END
+
+
+
+	--KẾT THÚC PHẦN THUỐC NHÉ
+
+
+	-- BẮT ĐẦU PHẦN KHÁCH HÀNG
+
+	SELECT * FROM dbo.NhanVien
+
+
+	CREATE VIEW vvSelectNV
+	AS 
+	SELECT NhanVien.sMaNV AS N'Mã Nhân Viên', NhanVien.sTenNV AS N'Tên Nhân Viên',NhanVien.bGioiTinh AS N'Giới Tính',NhanVien.sDiaChi AS N'Địa Chỉ',NhanVien.sDienThoai AS N'SDT',NhanVien.dNgaySinh AS N'Ngày Sinh',NhanVien.fLuongCoBan N'Lương Cơ Bản',NhanVien.fPhuCap AS N'Phụ Cấp' FROM dbo.NhanVien 
+
+	SELECT * FROM vvSelectNV
+
+	CREATE PROC prThemNhanVien
+	@sMaNV nvarchar(10),
+	@sTenNV NVARCHAR(30), 
+	@bGioiTinh BIT ,
+	@sDiaChi NVARCHAR(50), 
+	@sDienThoai CHAR(12), 
+	@dNgaySinh DATE, 
+	@fLuongCoBan FLOAT, 
+	@fPhuCap FLOAT 
+	AS
+    BEGIN
+        INSERT INTO dbo.NhanVien
+        VALUES
+        (   @sMaNV,
+            @sTenNV,
+            @bGioiTinh,
+            @sDiaChi,
+            @sDienThoai,
+            @dNgaySinh,
+            @fLuongCoBan,
+            @fPhuCap
+            )
+    END
+	SELECT * FROM dbo.NhanVien
+
+CREATE PROC CheckNhanVien 
+@sMaNV nvarchar(10)
+AS BEGIN
+       SELECT * FROM dbo.NhanVien WHERE NhanVien.sMaNV = @sMaNV
+   END
+
+CREATE PROC prSuaNhanVien
+	@sMaNV nvarchar(10),
+	@sTenNV NVARCHAR(30), 
+	@bGioiTinh BIT ,
+	@sDiaChi NVARCHAR(50), 
+	@sDienThoai CHAR(12), 
+	@dNgaySinh DATE, 
+	@fLuongCoBan FLOAT, 
+	@fPhuCap FLOAT 
+AS
+BEGIN
+    UPDATE dbo.NhanVien SET NhanVien.sTenNV = @sTenNV, NhanVien.bGioiTinh = @bGioiTinh,NhanVien.sDiaChi = @sDiaChi,
+	NhanVien.sDienThoai = @sDienThoai, NhanVien.dNgaySinh = @dNgaySinh, NhanVien.fLuongCoBan = @fLuongCoBan,NhanVien.fPhuCap = @fPhuCap
+	WHERE NhanVien.sMaNV = @sMaNV
+END
+
+CREATE PROC prXoaNhanVien
+@sMaNV nvarchar(10)
+AS
+BEGIN
+    DELETE NhanVien WHERE NhanVien.sMaNV = @sMaNV
+END
+
+CREATE PROC checkMaNVTrongHoaDon
+@sMaNV nvarchar(10)
+AS
+BEGIN
+    SELECT * FROM dbo.HoaDon WHERE HoaDon.sMaNV = @sMaNV
+END
+
+CREATE PROC prSelectNhanVien
+AS
+BEGIN
+    SELECT * FROM dbo.NhanVien
+END
+
+
+----------------------------------- chi tiết hóa đơn ----------------------------------------
+SELECT * FROM dbo.ChiTietHoaDon
+
+
+
+
+CREATE PROC prThemCTHD
+@sMaHD nvarchar(10),
+@sMaThuoc CHAR(10), 
+@fDonGia FLOAT ,
+@iSoLuongMua INT, 
+@fMucGiamGia FLOAT
+AS
+BEGIN
+    INSERT INTO dbo.ChiTietHoaDon
+    VALUES
+    (  @sMaHD,
+       @sMaThuoc,
+       @fDonGia,
+       @iSoLuongMua,
+       @fMucGiamGia
+        )
+END

@@ -1,0 +1,76 @@
+CREATE PROC pr_hoadon
+	@sMaHD nvarchar(10)
+	AS
+    BEGIN
+        SELECT * FROM dbo.HoaDon WHERE sMaHD = @sMaHD
+    END
+
+CREATE PROC pr_HoaDonThem
+	@sMaHD nvarchar(10),
+	@sMaNV nvarchar(10),
+	@sMaKH nvarchar(10),
+	@sLoaiHoaDon nvarchar(20) ,
+	@dNgayLap DATE
+AS
+BEGIN
+    INSERT INTO HoaDon
+	values
+		(@sMaHD ,@sMaNV ,@sMaKH ,@sLoaiHoaDon  ,@dNgayLap )
+END
+
+select * from dbo.HoaDon
+
+
+ CREATE VIEW vvHoaDon
+ as
+ SELECT sMaHD AS N'Mã Hóa Đơn',sMaNV AS N'Mã Nhân Viên',sMaKH AS N'Mã Khách Hàng',sLoaiHoaDon AS 'Loại Hóa Đơn',dNgayLap AS N'Ngày Lập' FROM dbo.HoaDon
+
+
+ CREATE PROC xoa_HD
+	@sMaHD nvarchar(10)
+AS
+BEGIN
+    DELETE dbo.HoaDon WHERE sMaHD = @sMaHD
+END
+
+
+CREATE PROC sua_HD
+	@sMaHD nvarchar(10),
+	@sMaNV nvarchar(10),
+	@sMaKH nvarchar(10),
+	@sLoaiHoaDon nvarchar(20) ,
+	@dNgayLap DATE
+
+AS
+ BEGIN
+     UPDATE dbo.HoaDon set 
+	sMaHD =	@sMaHD ,
+	sMaNV = @sMaNV ,
+	sMaKH = @sMaKH,
+	sLoaiHoaDon = @sLoaiHoaDon,
+	dNgayLap = @dNgayLap 
+	WHERE sMaHD = @sMaHD
+ END
+
+
+ create proc pr_Inthuoc
+  @sMaThuoc char(10)
+  as
+  begin
+	select * from dbo.ChiTietHoaDon where ChiTietHoaDon.sMaThuoc = @sMaThuoc
+  end
+
+
+CREATE PROC pr_checkKNHD
+ @sMaHD nvarchar(10)
+ AS 
+ BEGIN
+     SELECT * FROM dbo.ChiTietHoaDon WHERE sMaHD = @sMaHD
+ END
+
+
+ CREATE PROC pr_selectHD
+  AS
+  BEGIN
+      SELECT * FROM dbo.HoaDon
+  END

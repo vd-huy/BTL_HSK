@@ -1,0 +1,70 @@
+-- proc thêm mới khách hàng
+create proc pr_ThemKhachHang
+@sMaKH char(10),
+@sLoaiKhach nvarchar(20),
+@sTenKH nvarchar(30),
+@sDienThoai char(12),
+@sDiaChi nvarchar(50)
+as
+begin
+insert into KhachHang values (@sMaKH, @sLoaiKhach,@sTenKH,@sDienThoai,@sDiaChi)
+end
+
+-- proc kiểm tra mã khách hàng tồn tại
+create proc pr_checkkhachHang
+@sMaKH char(10)
+as
+begin
+select * from KhachHang where sMaKH = @sMaKH
+end
+
+
+-- view lọc khách là nhà cung cấp
+ create view vv_NhaCungCap
+ as 
+ select * from KhachHang where sLoaiKhach =N'nhà cung cấp'
+ drop view vv_NhaCungCap
+ select * from vv_NhaCungCap
+ -- view lọc loại khách là khách hàng
+ create view vv_KhachHang
+ as
+ select * from KhachHang where sLoaiKhach =N'Khách hàng'
+ select * from vv_KhachHang
+
+ select distinct sLoaiKhach from KhachHang
+ -- Xóa theo mã khách hàng
+ create proc pr_XoaTheoMaKH
+ @sMaKH char(10)
+ as
+ begin
+ delete from KhachHang where sMaKH = @sMaKH
+ end
+
+ drop proc pr_XoaTheoMaKH
+ select * from KhachHang
+
+-- proc sửa khách hàng
+create proc pr_SuaKH
+@sMaKH char(10), @sLoaiKhach nvarchar(20), @sTenKH nvarchar(30), @sDienThoai char(12), @sDiaChi nvarchar(50)
+as
+begin
+update KhachHang set  sLoaiKhach = @sLoaiKhach,sTenKH = @sTenKH,sDienThoai =@sDienThoai,sDiaChi = @sDiaChi where sMaKH = @sMaKH
+end
+drop proc pr_SuaKH
+-- proc tim kieem theo ma
+create proc pr_TimKiemTheoMa
+@sMaKH char(10)
+as
+ begin
+ select * from KhachHang where @sMaKH = sMaKH
+ end
+ exec  pr_TimKiemTheoMa @sMaKH = 'KH01'
+ CREATE VIEW vvThuoc
+ as
+ SELECT sMaThuoc AS N'Mã Thuốc',sTenThuoc AS N'Tên Thuốc',sMaNCC AS N'Nhà Cung Cấp',dHanSuDung AS 'Hạn Sử Dụng',iSoLuong AS N'Số Lượng',fDonGia AS N'Đơn Giá' FROM dbo.Thuoc
+
+
+ create view vvKhachHang 
+ as
+ select sMaKH as N'Mã khách hàng',sTenKh as N'Tên khách hàng',sLoaiKhach as N'Loại khách' ,sDiaChi as N'Địa chỉ',sDienThoai as N'Số điện thoại' from KhachHang
+ drop view vvKhachHang
